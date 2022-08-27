@@ -124,4 +124,36 @@
 	    echo "<script type='text/javascript'> document.location ='./prechecks.php'; </script>";
 	}
 
+	//patient consultation
+	if(isset($_POST["addCon"])) {
+		$vid = $_POST["visit"];
+	    $pid = $_POST["patid"];
+	    $desc = $_POST["desc"];
+	    $pesc = $_POST["prescription"];
+	    $refer = $_POST["refer"] ?? '-';
+		$dnby = '-';
+		$prescId = 0;
+		
+		if($pesc != ''){
+			$sql2 = 'INSERT INTO prescription (visitid, patid, description, approved_by, status, date, done_by) 
+			VALUES ("'.$vid.'","'.$pid.'","'.$pesc.'","-","active",NOW(),"'.$dnby.'")';
+			$query2 = $db->prepare($sql2);   
+			$query2->execute();
+
+			$prescId = $db->lastInsertId();
+		}
+
+	    $sql = 'INSERT INTO consultation (visitid, patid, description, prescription, refer, status, date, done_by) 
+        VALUES ("'.$vid.'","'.$pid.'","'.$desc.'","'.$prescId.'","'.$refer.'","active",NOW(),"'.$dnby.'")';
+	    
+	    $query = $db->prepare($sql);   
+	    $query->execute();
+
+		$sql3 = "UPDATE visits SET stage='consult' WHERE id='".$vid."'";
+		$query3 = $db->prepare($sql3);   
+	    $query3->execute();
+
+	    echo "<script type='text/javascript'> document.location ='./consultation.php'; </script>";
+	}
+
  ?>
