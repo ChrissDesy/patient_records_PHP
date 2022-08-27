@@ -4,12 +4,12 @@
     include('./controllers/dbcon.php');
     include('./controllers/patientCon.php');
 
-    // if(!isset($_SESSION['username'])){
-    //     echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
-    // }
+    if(!isset($_SESSION['username'])){
+        echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
+    }
 
     //get employees
-    $sql = "select p.patid, fname, lname, email, phone, gender, natid, v.status from patients as p, visits as v where p.patid = v.patid and v.status = 'active'";
+    $sql = "select p.patid, fname, lname, email, phone, gender, natid, v.status, stage from patients as p, visits as v where p.patid = v.patid and v.status = 'active'";
     $statement = $db->prepare($sql);
     $statement->execute();
     $result = $statement->fetchAll();
@@ -77,6 +77,7 @@
                                             <th>Email</th>
                                             <th>Gender</th>
                                             <th>Phone</th>
+                                            <th>Stage</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -90,6 +91,7 @@
                                                 <td><?php echo $r['email']; ?></td>
                                                 <td><?php echo $r['gender']; ?></td>
                                                 <td><?php echo $r['phone']; ?></td>
+                                                <td><?php echo $r['stage']; ?></td>
                                                 <td>
                                                     <span class="text-danger" data-target="#docs" data-toggle="modal" data-myid="<?php echo $r['patid']; ?>">
                                                         <i class="fa fa-trash"></i>

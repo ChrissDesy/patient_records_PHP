@@ -1,3 +1,16 @@
+<?php 
+
+  session_start();
+  include('./admin/controllers/dbcon.php');
+
+  if($_SESSION['username'] ?? '' != ''){
+    echo "<script type='text/javascript'> document.location ='./admin/index.php'; </script>";
+  }
+
+  include('./admin/controllers/userLogin.php');
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,15 +52,23 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
-                                <form class="user">
+                                <form class="user" method="post">
+                                    <?php
+                                        if($_SESSION['errorMessage'] ?? "" != ""){
+                                    ?>
+                                    <div class="text-danger text-center">
+                                        <?php echo $_SESSION['errorMessage']; $_SESSION['errorMessage'] = null; ?>
+                                    </div>
+                                    <br>
+                                    <?php } ?>
                                     <div class="form-group">
-                                        <input type="email" class="form-control form-control-user"
-                                            id="exampleInputEmail" aria-describedby="emailHelp"
-                                            placeholder="Enter Email Address...">
+                                        <input type="text" class="form-control form-control-user"
+                                            id="exampleInputEmail" required name="username" aria-describedby="emailHelp"
+                                            placeholder="Enter Username...">
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                            id="exampleInputPassword" required name="password" placeholder="Password">
                                     </div>
                                     <div class="form-group">
                                         <!-- <div class="custom-control custom-checkbox small">
@@ -56,9 +77,9 @@
                                                 Me</label>
                                         </div> -->
                                     </div>
-                                    <a href="./admin/index.php" class="btn btn-primary btn-user btn-block">
+                                    <button type="submit" name="login" class="btn btn-primary btn-user btn-block">
                                         Login
-                                    </a>
+                                    </button>
                                 </form>
                                 <hr>
                                 <div class="text-center">

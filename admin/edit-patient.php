@@ -10,9 +10,9 @@
     include('./controllers/dbcon.php');
     include('./controllers/patientCon.php');
 
-    // if(!isset($_SESSION['username'])){
-    //     echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
-    // } 
+    if(!isset($_SESSION['username'])){
+        echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
+    } 
 
     $sql = "SELECT * FROM patients WHERE id='".$ref."'";
     $statement = $db->prepare($sql);

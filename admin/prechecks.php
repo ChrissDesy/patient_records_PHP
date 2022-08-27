@@ -4,9 +4,9 @@
     include('./controllers/dbcon.php');
     include('./controllers/patientCon.php');
 
-    // if(!isset($_SESSION['username'])){
-    //     echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
-    // }
+    if(!isset($_SESSION['username'])){
+        echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
+    }
 
     //get employees
     $sql = "select p.patid, fname, lname, email, phone, gender, natid, v.status, v.id as vid from patients as p, visits as v where p.patid = v.patid and v.status = 'active' and v.stage='admission'";

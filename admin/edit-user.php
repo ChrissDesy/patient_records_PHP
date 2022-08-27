@@ -10,9 +10,9 @@
     session_start();
     include('./controllers/dbcon.php');
 
-    // if(!isset($_SESSION['username'])){
-    //     echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
-    // }
+    if(!isset($_SESSION['username'])){
+        echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
+    }
 
     include('./controllers/usersCon.php');
 
