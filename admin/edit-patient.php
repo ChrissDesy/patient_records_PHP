@@ -1,5 +1,4 @@
-<?php
-
+<?php 
     if(!isset($_REQUEST['id'])){
         exit("Error: No reference found");
     }
@@ -9,14 +8,13 @@
 
     session_start();
     include('./controllers/dbcon.php');
+    include('./controllers/patientCon.php');
 
     // if(!isset($_SESSION['username'])){
     //     echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
-    // }
+    // } 
 
-    include('./controllers/usersCon.php');
-
-    $sql = "SELECT * FROM users WHERE id='".$ref."'";
+    $sql = "SELECT * FROM patients WHERE id='".$ref."'";
     $statement = $db->prepare($sql);
     $statement->execute();
     $result = $statement->fetchAll();
@@ -25,9 +23,9 @@
         $r = $result[0];
     }
     else{
-        $_SESSION['errorMessage'] = 'User Not Found';
+        $_SESSION['errorMessage'] = 'Patient Not Found';
     }
-
+    
     include('./includes/header.php'); 
 ?>
 
@@ -54,11 +52,11 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h4 class="mb-4 text-gray-800">Users</h4>
+                    <h4 class="mb-4 text-gray-800">Patients</h4>
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Update User Details</h3>
+                            <h3 class="card-title">Create New Patient</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -82,7 +80,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 Lastname
-                                                <input type="text" name="lname" required value="<?php echo $r['lname']; ?>" placeholder="Lastname" class="form-control">
+                                                <input type="text" name="lname" value="<?php echo $r['lname']; ?>" required placeholder="Lastname" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -113,12 +111,39 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                Address
+                                                <input type="text" value="<?php echo $r['address']; ?>" name="address" required placeholder="Address" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <hr>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                Next of Kin Name
+                                                <input type="text" value="<?php echo $r['kin_name']; ?>" name="kname" required placeholder="Name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                Next of Kin Email
+                                                <input type="email" value="<?php echo $r['kin_email']; ?>" name="kemail" required placeholder="Email" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                Next of Kin Phone
+                                                <input type="text" value="<?php echo $r['kin_phone']; ?>" name="kphone" required placeholder="Phone Number" class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                     <br><br>
                                     <div class="text-center">
                                         <button type="reset" class="btn btn-sm btn-danger">Reset</button>
-                                        <button type="submit" name="editRec" class="btn btn-sm btn-primary">
-                                            Update
+                                        <button type="submit" name="editPat" class="btn btn-sm btn-primary">
+                                            Save
                                         </button>
                                     </div>
                                 </fieldset>
