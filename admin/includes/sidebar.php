@@ -33,6 +33,13 @@
             <span>Admissions</span></a>
     </li>
 
+    <!-- Nav Item - Prechecks -->
+    <li class="nav-item">
+        <a class="nav-link" href="prechecks.php">
+            <i class="fas fa-fw fa-user-nurse"></i>
+            <span>Pre-Checks</span></a>
+    </li>
+
     <!-- Nav Item - Pages Collapse Menu -->
     <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"

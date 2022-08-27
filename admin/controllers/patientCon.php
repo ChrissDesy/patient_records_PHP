@@ -101,4 +101,27 @@
 	    echo "<script type='text/javascript'> document.location ='./admissions.php'; </script>";
 	}
 
+	//patient precheck
+	if(isset($_POST["addPre"])) {
+		$vid = $_POST["visit"];
+	    $pid = $_POST["patid"];
+	    $temp = $_POST["temp"];
+	    $blood = $_POST["blood"];
+		$weight = $_POST["weight"];
+		$other = $_POST["notes"];
+		$dnby = '-';
+
+	    $sql = 'INSERT INTO precheck (visitid, patid, temprature, blood, weight, other, status, date, done_by) 
+        VALUES ("'.$vid.'","'.$pid.'","'.$temp.'","'.$blood.'","'.$weight.'","'.$other.'","active",NOW(),"'.$dnby.'")';
+	    
+	    $query = $db->prepare($sql);   
+	    $query->execute();
+
+		$sql2 = "UPDATE visits SET stage='precheck' WHERE id='".$vid."'";
+		$query2 = $db->prepare($sql2);   
+	    $query2->execute();
+
+	    echo "<script type='text/javascript'> document.location ='./prechecks.php'; </script>";
+	}
+
  ?>
