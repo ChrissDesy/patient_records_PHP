@@ -40,13 +40,19 @@
             <span>Pre-Checks</span></a>
     </li>
 
-    <!-- Nav Item - Prechecks -->
+    <!-- Nav Item - consultation -->
     <li class="nav-item">
         <a class="nav-link" href="consultation.php">
-            <i class="fas fa-fw fa-user-check"></i>
+            <i class="fas fa-fw fa-user-plus"></i>
             <span>Consultations</span></a>
     </li>
 
+    <!-- Nav Item - specialists -->
+    <li class="nav-item">
+        <a class="nav-link" href="specialist.php">
+            <i class="fas fa-fw fa-user-friends"></i>
+            <span>Specialist</span></a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
