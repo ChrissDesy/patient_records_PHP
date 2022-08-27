@@ -32,6 +32,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="./../assets/js/sb-admin-2.min.js"></script>
+    <script src="./../assets/js/select2.min.js"></script>
 
     <!-- Page level plugins -->
     <!-- <script src="./../assets/vendor/chart.js/Chart.min.js"></script> -->

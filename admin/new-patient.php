@@ -49,6 +49,7 @@
                                             <div class="form-group">
                                                 Firstname
                                                 <input type="text" name="fname" required placeholder="Firstname" class="form-control">
+                                                <input type="text" name="returnUrl" value="patients.php" hidden class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-6">

@@ -13,6 +13,7 @@
 		$kemail = $_POST["kemail"];
 		$kphone = $_POST["kphone"];
         $uid = 'PT'. mt_rand(1000,9999);
+		$rurl = $_POST['returnUrl'];
 
 	    $sql = 'INSERT INTO patients (kin_name, fname, lname, gender, email, phone, address, patid, kin_email, kin_phone, natid, status, date) 
         VALUES ("'.$knam.'","'.$fname.'","'.$lname.'","'.$gen.'","'.$email.'","'.$phone.'","'.$add.'","'.$uid.'","'.$kemail.'","'.$kphone.'","'.$nid.'","active",NOW())';
@@ -20,7 +21,7 @@
 	    $query = $db->prepare($sql);   
 	    $query->execute();
 
-	    echo "<script type='text/javascript'> document.location ='./patients.php'; </script>";
+	    echo "<script type='text/javascript'> document.location ='./".$rurl."'; </script>";
 	}
 
     //handle editing
@@ -75,5 +76,29 @@
 		// echo $id;
 	}
 
+	//handle add visit
+	if(isset($_POST["addVis"])) {
+		$patid = $_POST["patid"];
+
+	    $sql = 'INSERT INTO visits (patid, stage, dis_date, status, date) 
+        VALUES ("'.$patid.'","admission","-","active",NOW())';
+	    
+	    $query = $db->prepare($sql);   
+	    $query->execute();
+
+	    echo "<script type='text/javascript'> document.location ='./admissions.php'; </script>";
+	}
+
+	// patient discharge
+	if(isset($_POST["addDis"])) {
+		$patid = $_POST["patid"];
+
+	    $sql = "UPDATE visits SET status='discharged', dis_date=NOW() WHERE patid='".$patid."' and status='active'";
+	    
+	    $query = $db->prepare($sql);   
+	    $query->execute();
+
+	    echo "<script type='text/javascript'> document.location ='./admissions.php'; </script>";
+	}
 
  ?>
