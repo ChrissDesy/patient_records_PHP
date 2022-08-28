@@ -109,7 +109,7 @@
 	    $blood = $_POST["blood"];
 		$weight = $_POST["weight"];
 		$other = $_POST["notes"];
-		$dnby = '-';
+		$dnby = $_SESSION['username'];
 
 	    $sql = 'INSERT INTO precheck (visitid, patid, temprature, blood, weight, other, status, date, done_by) 
         VALUES ("'.$vid.'","'.$pid.'","'.$temp.'","'.$blood.'","'.$weight.'","'.$other.'","active",NOW(),"'.$dnby.'")';
@@ -131,7 +131,7 @@
 	    $desc = $_POST["desc"];
 	    $pesc = $_POST["prescription"];
 	    $refer = $_POST["refer"] ?? '-';
-		$dnby = '-';
+		$dnby = $_SESSION['username'];
 		$prescId = 0;
 		
 		if($pesc != ''){
@@ -156,7 +156,7 @@
 	    echo "<script type='text/javascript'> document.location ='./consultation.php'; </script>";
 	}
 
-	//patient consultation
+	//patient procedure
 	if(isset($_POST["addPro"])) {
 		$vid = $_POST["visit"];
 	    $pid = $_POST["patid"];
@@ -164,7 +164,7 @@
 	    $pesc = $_POST["prescription"];
 	    $name = $_POST["name"];
 	    $dpt = $_SESSION['udpt'];
-		$dnby = '-';
+		$dnby = $_SESSION['username'];
 		$prescId = 0;
 		
 		if($pesc != ''){
@@ -187,6 +187,19 @@
 	    $query3->execute();
 
 	    echo "<script type='text/javascript'> document.location ='./specialist.php'; </script>";
+	}
+
+	// dispense
+	if(isset($_POST["addDisp"])) {
+		$ref = $_POST["ref"];
+	    $status = $_POST["status"];
+		$dnby = $_SESSION['username'];
+		
+		$sql3 = "UPDATE prescription SET status='$status', approved_by='$dnby' WHERE id='".$ref."'";
+		$query3 = $db->prepare($sql3);   
+	    $query3->execute();
+
+	    echo "<script type='text/javascript'> document.location ='./pharmacy.php'; </script>";
 	}
 
  ?>

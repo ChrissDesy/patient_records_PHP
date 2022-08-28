@@ -54,6 +54,13 @@
             <span>Specialist</span></a>
     </li>
 
+    <!-- Nav Item - pharmacy -->
+    <li class="nav-item">
+        <a class="nav-link" href="pharmacy.php">
+            <i class="fas fa-fw fa-briefcase-medical"></i>
+            <span>Pharmacy</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
