@@ -1,5 +1,28 @@
 <?php 
     session_start();
+
+    include('./controllers/dbcon.php');
+
+    if(!isset($_SESSION['username'])){
+        echo "<script type='text/javascript'> document.location ='./controllers/logout.php'; </script>";
+    }
+
+    //get employees
+    $sql = "select p.patid, fname, lname, email, phone, gender, natid, v.status, stage from patients as p, visits as v where p.patid = v.patid and v.status = 'active'";
+    $statement = $db->prepare($sql);
+    $statement->execute();
+    $result = $statement->fetchAll();
+
+    $sql2 = "
+        SELECT
+            (SELECT COUNT(*) FROM users) AS users,
+            (SELECT COUNT(*) FROM patients) AS patients,
+            (SELECT COUNT(*) FROM visits WHERE STATUS='active') AS visits,
+            (SELECT COUNT(*) FROM prescription WHERE status = 'active') AS presc
+    ";
+    $statement2 = $db->prepare($sql2);
+    $statement2->execute();
+    $stats = $statement2->fetchAll();
     
     include('./includes/header.php'); 
 ?>
@@ -43,11 +66,11 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Earnings (Monthly)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                Patients </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $stats[0]['patients']; ?></div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            <i class="fas fa-user-injured fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -61,11 +84,11 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Earnings (Annual)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                                Active Visits </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $stats[0]['visits']; ?></div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                            <i class="fas fa-list-alt fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -78,18 +101,11 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1"> Active Prescriptions
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
-                                                    </div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $stats[0]['presc']; ?></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,11 +124,11 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                                System Users</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $stats[0]['users']; ?></div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                            <i class="fas fa-users-cog fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -125,75 +141,48 @@
                     <div class="row">
 
                         <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
+                        <div class="col-md-12">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
+                                    <h6 class="m-0 font-weight-bold text-primary">Active Patients Visits</h6>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Patient ID</th>
+                                                    <th>Name</th>
+                                                    <th>National ID</th>
+                                                    <th>Gender</th>
+                                                    <th>Phone</th>
+                                                    <th>Stage</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($result as $r) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $r['patid']; ?></td>
+                                                        <td><?php echo $r['fname'] . ' '.$r['lname'] ; ?></td>
+                                                        <td><?php echo $r['natid']; ?></td>
+                                                        <td><?php echo $r['gender']; ?></td>
+                                                        <td><?php echo $r['phone']; ?></td>
+                                                        <td><?php echo $r['stage']; ?></td>
+                                                    </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="myPieChart"></canvas>
-                                    </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
-                                    </div>
-                                </div>
+                                <!-- <div class="card-footer text-right">
+                                    <span class="text-secondary">
+                                        <i class="fa fa-list"></i> &nbsp;&nbsp; Manage Admissions
+                                    </span>
+                                </div> -->
                             </div>
                         </div>
                     </div>
